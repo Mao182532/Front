@@ -1,47 +1,59 @@
 <template>
-<v-card
-    class="mx-auto"
-    max-width="434"
-    tile
-  >
-    <v-img
-      height="100%"
-      src="https://cdn.vuetifyjs.com/images/cards/server-room.jpg"
+ <v-app id="inspire">
+    <v-system-bar app>
+      <v-spacer></v-spacer>
+
+      <v-icon>mdi-square</v-icon>
+
+      <v-icon>mdi-circle</v-icon>
+
+      <v-icon>mdi-triangle</v-icon>
+    </v-system-bar>
+
+    <v-app-bar app>
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+
+      <v-toolbar-title>Application</v-toolbar-title>
+    </v-app-bar>
+
+    <v-navigation-drawer
+      v-model="drawer"
+      fixed
+      temporary
     >
-      <v-row
-        align="end"
-        class="fill-height"
-      >
-        <v-col
-          align-self="start"
-          class="pa-0"
-          cols="12"
-        >
-          <v-avatar
-            class="profile"
-            color="grey"
-            size="164"
-            tile
-          >
-            <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
-          </v-avatar>
-        </v-col>
-        <v-col class="py-0">
-          <v-list-item
-            color="rgba(0, 0, 0, .4)"
-            dark
-          >
-            <v-list-item-content>
-              <v-list-item-title class="title">
-                Marcus Obrien
-              </v-list-item-title>
-              <v-list-item-subtitle>Network Engineer</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-col>
-      </v-row>
-    </v-img>
-  </v-card>
+      <!--  -->
+    </v-navigation-drawer>
+
+    <v-main class="grey lighten-2">
+      <v-container fluid>
+
+      <!-- If using vue-router -->
+      <router-view></router-view>
+    </v-container>
+      <v-container>
+        <v-row>
+          <template v-for="n in 4">
+            <v-col
+              :key="n"
+              class="mt-2"
+              cols="12"
+            >
+              <strong>Category {{ n }}</strong>
+            </v-col>
+
+            <v-col
+              v-for="j in 6"
+              :key="`${n}${j}`"
+              cols="6"
+              md="2"
+            >
+              <v-sheet height="150"></v-sheet>
+            </v-col>
+          </template>
+        </v-row>
+      </v-container>
+    </v-main>
+  </v-app>
 
 </template>
 
@@ -57,6 +69,7 @@ export default {
   },
 
   data: () => ({
+    //
     drawer: null}),
 };
 
