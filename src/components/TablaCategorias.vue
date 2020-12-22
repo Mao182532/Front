@@ -2,8 +2,10 @@
   <div> 
      <v-data-table
       :headers="headers"
-      :items="desserts"
-      sort-by="calories"
+      :items="categorias"
+      :loading="cargando"
+      loading-text="Cargando... Por favor esperar"
+      sort-by="id"
       class="elevation-1"
     >
       <template v-slot:top>
@@ -47,50 +49,20 @@
                     >
                       <v-text-field
                         v-model="editedItem.name"
-                        label="Dessert name"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.calories"
-                        label="Calories"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.fat"
-                        label="Fat (g)"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.carbs"
-                        label="Carbs (g)"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.protein"
-                        label="Protein (g)"
+                        label="Nombre de la categoria"
                       ></v-text-field>
                     </v-col>
                   </v-row>
+                  <v-row>
+                     
+                      <v-textarea
+                        v-model="editedItem.calories"
+                        label="Descripcion"
+                        auto-grow
+                        counter="240"
+                      ></v-textarea>
+                  </v-row>  
+                 
                 </v-container>
               </v-card-text>
   
@@ -126,7 +98,7 @@
           </v-dialog>
         </v-toolbar>
       </template>
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions´]="{ item }">
         <v-icon
           small
           class="mr-2"
@@ -154,38 +126,40 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
       data: () => ({
       dialog: false,
       dialogDelete: false,
+      cargando : true,
       headers: [
         {
-          text: 'Dessert (100g serving)',
+          text: 'Categorias de mis productos',
           align: 'start',
           sortable: false,
           value: 'name',
         },
-        { text: 'Calories', value: 'calories' },
-        { text: 'Fat (g)', value: 'fat' },
-        { text: 'Carbs (g)', value: 'carbs' },
-        { text: 'Protein (g)', value: 'protein' },
+        { text: 'ID', value: 'id' },
+        { text: 'Nombre', value: 'nombre' },
+        { text: 'Descripcion', value: 'descripcion' },
+        { text: 'Estado', value: 'estado' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      desserts: [],
+      categorias: [],
       editedIndex: -1,
       editedItem: {
         name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
+        id: 0,
+        nombre: 0,
+        descripcion: 0,
+        estado: 0,
       },
       defaultItem: {
         name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
+        id: 0,
+        nombre: 0,
+        descripcion: 0,
+        estado: 0,
       },
     }),
 
@@ -205,99 +179,43 @@ export default {
     },
 
     created () {
+      this.cargando = true
       this.initialize()
     },
 
     methods: {
-      initialize () {
-        this.desserts = [
-          {
-            name: 'Frozen Yogurt',
-            calories: 159,
-            fat: 6.0,
-            carbs: 24,
-            protein: 4.0,
-          },
-          {
-            name: 'Ice cream sandwich',
-            calories: 237,
-            fat: 9.0,
-            carbs: 37,
-            protein: 4.3,
-          },
-          {
-            name: 'Eclair',
-            calories: 262,
-            fat: 16.0,
-            carbs: 23,
-            protein: 6.0,
-          },
-          {
-            name: 'Cupcake',
-            calories: 305,
-            fat: 3.7,
-            carbs: 67,
-            protein: 4.3,
-          },
-          {
-            name: 'Gingerbread',
-            calories: 356,
-            fat: 16.0,
-            carbs: 49,
-            protein: 3.9,
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-            fat: 0.0,
-            carbs: 94,
-            protein: 0.0,
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-            fat: 0.2,
-            carbs: 98,
-            protein: 0,
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-            fat: 3.2,
-            carbs: 87,
-            protein: 6.5,
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-            fat: 25.0,
-            carbs: 51,
-            protein: 4.9,
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-            fat: 26.0,
-            carbs: 65,
-            protein: 7,
-          },
-        ]
+      list(){
+        
+        axios.get("insertar el link de la API")
+        .then( (response) => {
+          this.categorias = response.data
+
+        })
+        .catch( error => {
+          return error
+        })
+        this.cargando = false
+
       },
+      initialize () {
+        this.list()
+      },
+      
 
       editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
+        this.editedIndex = this.categorias.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
 
       deleteItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
+        this.editedIndex = this.categorias.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
 
       deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
+        this.categorias.splice(this.editedIndex, 1)
         this.closeDelete()
       },
 
@@ -321,7 +239,7 @@ export default {
         if (this.editedIndex > -1) {
           Object.assign(this.desserts[this.editedIndex], this.editedItem)
         } else {
-          this.desserts.push(this.editedItem)
+          this.categorias.push(this.editedItem)
         }
         this.close()
       },
