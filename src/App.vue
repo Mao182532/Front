@@ -55,8 +55,9 @@
             </template>
   
             <v-list-item
-              v-for="([title, icon], i) in admins"
+              v-for="([title, icon, ruta], i) in admins"
               :key="i"
+              :to="ruta"
               link
             >
               <v-list-item-title v-text="title"></v-list-item-title>
@@ -138,7 +139,7 @@ export default {
     //
     drawer: null}),
     admins: [
-      ['Usuarios', 'mdi-account-multiple-outline'],
+      ['Usuarios', 'mdi-account-multiple-outline', 'Usuarios'],
       ['Configuracion', 'mdi-cog-outline'],
     ],
     cruds: [

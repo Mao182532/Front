@@ -12,7 +12,7 @@
         <v-toolbar
           flat
         >
-          <v-toolbar-title>Categorias</v-toolbar-title>
+          <v-toolbar-title>Usuarios</v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
@@ -31,7 +31,7 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                AGREGAR CATEGORIA
+                AGREGAR USUARIO
               </v-btn>
             </template>
             <v-card>
@@ -44,7 +44,7 @@
                   <v-row>
                       <v-text-field
                         v-model="editedItem.nombre"
-                        label="Nombre de la categoria"
+                        label="Nombre deL usuario"
                       ></v-text-field>
                   </v-row>
                   <v-row>
@@ -81,7 +81,7 @@
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
-              <v-card-title class="headline">Esta seguro que desea cambiar el estado de la categoria?</v-card-title>
+              <v-card-title class="headline">Esta seguro que desea cambiar el estado del usuario?</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
@@ -130,38 +130,41 @@ export default {
       iconoCambio: "",
       headers: [
         {
-          text: 'Categorias de mis productos',
+          text: 'Base de mis usuarios',
           align: 'start',
           sortable: false,
           value: 'name',
         },
         { text: 'ID', value: 'id' },
         { text: 'Nombre', value: 'nombre' },
-        { text: 'Descripcion', value: 'descripcion' },
+        { text: 'Correo electronico', value: 'email' },
         { text: 'Estado', value: 'estado' },
+        { text: 'Contraseña', value: 'password' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      categorias: [],
+      usuarios: [],
       editedIndex: -1,
       editedItem: {
-        name: '',
+        nombre: '',
         id: 0,
-        nombre: 0,
-        descripcion: 0,
+        email: 0,
+        password: "",
+        rol: '',
         estado: 0,
       },
       defaultItem: {
-        name: '',
+        nombre: '',
         id: 0,
-        nombre: 0,
-        descripcion: 0,
+        email: 0,
+        password: '',
+        rol: '',
         estado: 0,
       },
     }),
 
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Nueva Categoria' : 'Editar Categoria'
+        return this.editedIndex === -1 ? 'Nueva Usuario' : 'Editar Usuario'
       },
     },
 
@@ -182,9 +185,9 @@ export default {
     methods: {
       list(){
         
-      this.$axios.get('/categoria/list')
+      this.$axios.get('/usuario/list')
         .then( (response) => {
-          this.categorias = response.data
+          this.usuarios = response.data
           this.cargando = false
         })
         .catch( error => {
@@ -199,7 +202,7 @@ export default {
       
 
       editItem (item) {
-        this.editedIndex = this.categorias.indexOf(item)
+        this.editedIndex = this.usuarios.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
     
@@ -208,16 +211,16 @@ export default {
       },
 
       deleteItem (item) {
-        this.editedIndex = this.categorias.indexOf(item)
+        this.editedIndex = this.usuarios.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
 
       deleteItemConfirm () {
         if (this.editedItem.estado === 1) {
-          axios.put("insertar url de la base de datos/api/categoria/deactivate", {id: this.editedItem.id})
+          this.$axios.put('/usuario/deactivate', {id: this.editedItem.id})
         }else {
-          axios.put("insertar url de la base de datos/api/categoria/activate", {id: this.editedItem.id})
+          this.$axios.put('/usuario/activate', {id: this.editedItem.id})
 
         }
             this.closeDelete()
@@ -247,19 +250,21 @@ export default {
 
           let objetoBusqueda = {
               nombre : this.editedItem.nombre,
-              descripcion : this.editedItem.descripcion,
+              email : this.editedItem.email,
               id :  this.editedItem.id
           }
-          axios.put("insertar url de la base de datos/api/categoria/update", objetoBusqueda)
-          Object.assign(this.categorias[this.editedIndex], this.editedItem)
+          this.$axios.put('/api/usuario/update', objetoBusqueda)
+          Object.assign(this.usuarios[this.editedIndex], this.editedItem)
         } else {
           let objetoBusqueda = {
               nombre : this.editedItem.nombre,
-              descripcion : this.editedItem.descripcion,
+              email : this.editedItem.email,
+              password: this.editedItem.password,
+              rol: this.editedItem.rol,
               estado : 1
           }
-           axios.post("insertar url de la base de datos/api/categoria/add", objetoBusqueda)
-          this.categorias.push(this.editedItem)
+           this.$axios.post('/usuario/add', objetoBusqueda)
+          this.usuarios.push(this.editedItem)
         }
         this.close()
       },
