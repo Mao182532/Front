@@ -1,18 +1,15 @@
 <template>
-  <div> 
-     <v-data-table
+<v-data-table
       :headers="headers"
-      :items="categorias"
-      :loading="cargando"
-      loading-text="Cargando... Por favor esperar"
-      sort-by="id"
+      :items="desserts"
+      sort-by="calories"
       class="elevation-1"
     >
       <template v-slot:top>
         <v-toolbar
           flat
         >
-          <v-toolbar-title>Categorias</v-toolbar-title>
+          <v-toolbar-title>My CRUD</v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
@@ -31,7 +28,7 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                AGREGAR CATEGORIA
+                New Item
               </v-btn>
             </template>
             <v-card>
@@ -42,21 +39,57 @@
               <v-card-text>
                 <v-container>
                   <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
                       <v-text-field
-                        v-model="editedItem.nombre"
-                        label="Nombre de la categoria"
+                        v-model="editedItem.name"
+                        label="Dessert name"
                       ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.calories"
+                        label="Calories"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.fat"
+                        label="Fat (g)"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.carbs"
+                        label="Carbs (g)"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.protein"
+                        label="Protein (g)"
+                      ></v-text-field>
+                    </v-col>
                   </v-row>
-                  <v-row>
-                     
-                      <v-textarea
-                        v-model="editedItem.descripcion"
-                        label="Descripcion"
-                        auto-grow
-                        counter="240"
-                      ></v-textarea>
-                  </v-row>  
-                 
                 </v-container>
               </v-card-text>
   
@@ -81,7 +114,7 @@
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
-              <v-card-title class="headline">Esta seguro que desea cambiar el estado de la categoria?</v-card-title>
+              <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
@@ -92,7 +125,7 @@
           </v-dialog>
         </v-toolbar>
       </template>
-      <template v-slot:[`item.actions´]="{ item }">
+      <template v-slot: ´item.actions´="{ item }">
         <v-icon
           small
           class="mr-2"
@@ -104,8 +137,7 @@
           small
           @click="deleteItem(item)"
         >
-         mdi-checkbox-marked-outline 
-
+          mdi-delete
         </v-icon>
       </template>
       <template v-slot:no-data>
@@ -117,7 +149,6 @@
         </v-btn>
       </template>
     </v-data-table>
-  </div>
 </template>
 
 <script>

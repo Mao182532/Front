@@ -13,5 +13,6 @@ const axiosConfig = {
 Vue.prototype.$axios = axios.create(axiosConfig)
 new Vue({
   router,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')

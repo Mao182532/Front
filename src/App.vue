@@ -13,13 +13,14 @@
     <v-app-bar app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Admin Vitapets</v-toolbar-title>
+      <v-toolbar-title> PAGINA CONTROL...</v-toolbar-title>
     </v-app-bar>
 
     <v-navigation-drawer
       v-model="drawer"
       fixed
       temporary
+      
     >
     <v-card
       class="mx-auto"
@@ -27,7 +28,6 @@
     >
       <v-list>
         <v-list-item>
-          to="Home"
           <v-list-item-icon>
             <v-icon>mdi-home</v-icon>
           </v-list-item-icon>
@@ -55,9 +55,8 @@
             </template>
   
             <v-list-item
-              v-for="([title, icon, ruta], i) in admins"
+              v-for="([title, icon], i) in admins"
               :key="i"
-              :to="ruta"
               link
             >
               <v-list-item-title v-text="title"></v-list-item-title>
@@ -79,10 +78,11 @@
             </template>
   
             <v-list-item
-              v-for="([title, icon, ruta], i) in cruds"
+              v-for="([title, icon,ruta], i) in cruds"
               :key="i"
               :to="ruta"
               link
+
             >
               <v-list-item-title v-text="title"></v-list-item-title>
   
@@ -98,76 +98,34 @@
     </v-navigation-drawer>
 
     <v-main class="grey lighten-2">
-      <v-container>
-        <v-row>
-          <template v-for="n in 4">
-            <v-col
-              :key="n"
-              class="mt-2"
-              cols="12"
-            >
-              <strong>Category {{ n }}</strong>
-            </v-col>
-
-            <v-col
-              v-for="j in 6"
-              :key="`${n}${j}`"
-              cols="6"
-              md="2"
-            >
-              <v-sheet height="150"></v-sheet>
-            </v-col>
-          </template>
-        </v-row>
+      <v-container fluid>
+      <router-view></router-view>
       </v-container>
-    </v-main>
+      
+     </v-main>
   </v-app>
+
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
+import HelloWorld from './components/HelloWorld';
 
 export default {
-
-  name: "App",
+  name: 'App',
 
   components: {
     HelloWorld,
   },
 
   data: () => ({
-    //
-    drawer: null}),
-    admins: [
-      ['Usuarios', 'mdi-account-multiple-outline', 'Usuarios'],
+    draw:null,
+   admins: [
+      ['Usuarios', 'mdi-account-multiple-outline'],
       ['Configuracion', 'mdi-cog-outline'],
     ],
     cruds: [
-      ['Articulos', 'mdi-plus-outline', 'Articulos'],
-      ['Categorias', 'mdi-view-list', 'Categorias'],
-    ],
-};
+      ['Articulos', 'mdi-plus-outline','Articulos'],
+      ['Categoria', 'mdi-file-outline','Categorias'],],})
+    };
 
 </script>
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
