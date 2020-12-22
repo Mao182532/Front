@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-import TheLogin from '../components/theLogin.vue'
+import TheLogin from './components/TheLogin.vue'
 
 export default {
     components: {TheLogin},
