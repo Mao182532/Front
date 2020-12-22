@@ -42,21 +42,15 @@
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
                       <v-text-field
-                        v-model="editedItem.name"
+                        v-model="editedItem.nombre"
                         label="Nombre de la categoria"
                       ></v-text-field>
-                    </v-col>
                   </v-row>
                   <v-row>
                      
                       <v-textarea
-                        v-model="editedItem.calories"
+                        v-model="editedItem.descripcion"
                         label="Descripcion"
                         auto-grow
                         counter="240"
@@ -87,7 +81,7 @@
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
-              <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
+              <v-card-title class="headline">Esta seguro que desea cambiar el estado de la categoria?</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
@@ -110,7 +104,8 @@
           small
           @click="deleteItem(item)"
         >
-          mdi-delete
+         mdi-checkbox-marked-outline 
+
         </v-icon>
       </template>
       <template v-slot:no-data>
@@ -132,6 +127,7 @@ export default {
       dialog: false,
       dialogDelete: false,
       cargando : true,
+      iconoCambio: "",
       headers: [
         {
           text: 'Categorias de mis productos',
@@ -165,7 +161,7 @@ export default {
 
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+        return this.editedIndex === -1 ? 'Nueva Categoria' : 'Editar Categoria'
       },
     },
 
@@ -206,6 +202,9 @@ export default {
         this.editedIndex = this.categorias.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
+    
+      // Actualizar la tabla
+        this.list()
       },
 
       deleteItem (item) {
@@ -215,8 +214,13 @@ export default {
       },
 
       deleteItemConfirm () {
-        this.categorias.splice(this.editedIndex, 1)
-        this.closeDelete()
+        if (this.editedItem.estado === 1) {
+          axios.put("insertar url de la base de datos/api/categoria/deactivate", {id: this.editedItem.id})
+        }else {
+          axios.put("insertar url de la base de datos/api/categoria/activate", {id: this.editedItem.id})
+
+        }
+            this.closeDelete()
       },
 
       close () {
@@ -225,6 +229,7 @@ export default {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
         })
+          
       },
 
       closeDelete () {
@@ -233,12 +238,27 @@ export default {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
         })
+        this.list()
       },
 
       save () {
         if (this.editedIndex > -1) {
+          // Editar en base de datos
+
+          let objetoBusqueda = {
+              nombre : this.editedItem.nombre,
+              descripcion : this.editedItem.descripcion,
+              id :  this.editedItem.id
+          }
+          axios.put("insertar url de la base de datos/api/categoria/update", objetoBusqueda)
           Object.assign(this.desserts[this.editedIndex], this.editedItem)
         } else {
+          let objetoBusqueda = {
+              nombre : this.editedItem.nombre,
+              descripcion : this.editedItem.descripcion,
+              estado : 1
+          }
+           axios.post("insertar url de la base de datos/api/categoria/add", objetoBusqueda)
           this.categorias.push(this.editedItem)
         }
         this.close()
