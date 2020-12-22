@@ -46,7 +46,7 @@
                     >
                       <v-text-field
                         v-model="editedItem.name"
-                        label="Dessert name"
+                        label="Categoria.."
                       ></v-text-field>
                     </v-col>
                     <v-col
@@ -56,7 +56,7 @@
                     >
                       <v-text-field
                         v-model="editedItem.calories"
-                        label="Calories"
+                        label="Id"
                       ></v-text-field>
                     </v-col>
                     <v-col
@@ -66,7 +66,7 @@
                     >
                       <v-text-field
                         v-model="editedItem.fat"
-                        label="Fat (g)"
+                        label="Nombre"
                       ></v-text-field>
                     </v-col>
                     <v-col
@@ -76,7 +76,7 @@
                     >
                       <v-text-field
                         v-model="editedItem.carbs"
-                        label="Carbs (g)"
+                        label="Descripcion"
                       ></v-text-field>
                     </v-col>
                     <v-col
@@ -86,7 +86,7 @@
                     >
                       <v-text-field
                         v-model="editedItem.protein"
-                        label="Protein (g)"
+                        label="Estado"
                       ></v-text-field>
                     </v-col>
                   </v-row>
@@ -166,20 +166,20 @@ export default {
           sortable: false,
           value: 'name',
         },
-        { text: 'ID', value: 'id' },
-        { text: 'Nombre', value: 'nombre' },
-        { text: 'Descripcion', value: 'descripcion' },
-        { text: 'Estado', value: 'estado' },
+        { text: 'ID', value: 'id' ,sortable:false},
+        { text: 'Nombre', value: 'nombre',sortable:false },
+        { text: 'Descripcion', value: 'descripcion',sortable:false },
+        { text: 'Estado', value: 'estado',sortable:false },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
       categorias: [],
       editedIndex: -1,
       editedItem: {
-        name: '',
-        id: 0,
-        nombre: 0,
-        descripcion: 0,
-        estado: 0,
+        name: 'Categoria 1',
+        id: '1',
+        nombre: 'Sub-categoria1',
+        descripcion: 'primer de las categorias',
+        estado: '1',
       },
       defaultItem: {
         name: '',
@@ -225,7 +225,15 @@ export default {
 
       },
       initialize () {
-        this.list()
+        this.list(),
+        this.desserts = [
+        {
+          name: 'Categoria 1',
+          id: '1',
+          nombre: 'Sub-categoria1',
+          descripcion: 'primer de las categorias',
+          estado: '1',
+        },]
       },
       
 
