@@ -42,21 +42,26 @@ export default {
         async iniciarSesion(){
             // Funcion de iniciar sesion
             try {
-                let response = await this.$http.post('/api/user/login');
-                let token = response.data.tokenReturn;
-                let usuario = reponse.data.user;
-                if (token){
-                    localStorage.setItem('token', token);
-                    localStorage.setItem('usuario', JSON.stringify(usuario) );
-                    swal("Exito!", "ha iniciado sesion correctamente!", "succes");
-                    this.$router.push('/home');
-                }
+                let response = await this.$axios.post('/usuario/login', this.login)
+                    .then((response) => {
+                        let token = response.data.tokenReturn;
+                        let usuario = reponse.data.user;
+                        if (token){
+                            localStorage.setItem('token', token);
+                            localStorage.setItem('usuario', JSON.stringify(usuario) );
+                            swal("Exito!", "ha iniciado sesion correctamente!", "succes");
+                            this.$router.push('/home');
+                        }
+                    })
+                    .catch(error =>{
+                       swal("Oops!", "usuario o contraseña incorrectos!", "error");
+                    })
+                
             } catch (error){
                 swal("Ooops!", "Something went wrong!", "error");
             }
         }
     }
-    
 }
 </script>
 // hola
