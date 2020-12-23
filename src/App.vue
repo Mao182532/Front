@@ -28,7 +28,7 @@
       >
         <v-list>
           <v-list-item
-          to="Home">
+          to="/">
             <v-list-item-icon>
               <v-icon>mdi-home</v-icon>
             </v-list-item-icon>
@@ -56,8 +56,9 @@
               </template>
     
               <v-list-item
-                v-for="([title, icon], i) in admins"
+                v-for="([title, icon,ruta], i) in admins"
                 :key="i"
+                :to = "ruta"
                 link
               >
                 <v-list-item-title v-text="title"></v-list-item-title>
@@ -119,7 +120,7 @@ export default {
   data: () => ({
     drawer:null,
     admins: [
-      ['Management', 'mdi-account-multiple-outline'],
+      ['Management', 'mdi-account-multiple-outline','Usuarios'],
       ['Settings', 'mdi-cog-outline'],
     ],
     cruds: [

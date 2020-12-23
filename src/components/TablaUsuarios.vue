@@ -1,18 +1,15 @@
 <template>
-  <div> 
-     <v-data-table
+<v-data-table
       :headers="headers"
-      :items="categorias"
-      :loading="cargando"
-      loading-text="Cargando... Por favor esperar"
-      sort-by="id"
+      :items="desserts"
+      sort-by="calories"
       class="elevation-1"
     >
       <template v-slot:top>
         <v-toolbar
           flat
         >
-          <v-toolbar-title>Usuarios</v-toolbar-title>
+          <v-toolbar-title>My CRUD</v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
@@ -31,7 +28,7 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                AGREGAR USUARIO
+                New Item
               </v-btn>
             </template>
             <v-card>
@@ -42,21 +39,59 @@
               <v-card-text>
                 <v-container>
                   <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
                       <v-text-field
-                        v-model="editedItem.nombre"
-                        label="Nombre deL usuario"
+                        v-model="editedItem.name"
+                        label="Categoria.."
                       ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.calories"
+                        label="Id"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.fat"
+                        label="Nombre"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.carbs"
+                        label="email Electronico"
+                      el="email Electronico"
+                      
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.protein"
+                        label="Estado"
+                      ></v-text-field>
+                    </v-col>
                   </v-row>
-                  <v-row>
-                     
-                      <v-textarea
-                        v-model="editedItem.descripcion"
-                        label="Descripcion"
-                        auto-grow
-                        counter="240"
-                      ></v-textarea>
-                  </v-row>  
-                 
                 </v-container>
               </v-card-text>
   
@@ -81,7 +116,7 @@
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
-              <v-card-title class="headline">Esta seguro que desea cambiar el estado del usuario?</v-card-title>
+              <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
@@ -92,7 +127,7 @@
           </v-dialog>
         </v-toolbar>
       </template>
-      <template v-slot:[`item.actions`]="{ item }">
+      <template v-slot: item.actions ="{ item }">
         <v-icon
           small
           class="mr-2"
@@ -104,8 +139,7 @@
           small
           @click="deleteItem(item)"
         >
-         mdi-checkbox-marked-outline 
-
+          mdi-delete
         </v-icon>
       </template>
       <template v-slot:no-data>
@@ -117,7 +151,6 @@
         </v-btn>
       </template>
     </v-data-table>
-  </div>
 </template>
 
 <script>
@@ -130,34 +163,34 @@ export default {
       iconoCambio: "",
       headers: [
         {
-          text: 'Base de mis usuarios',
+          text: 'Base de los usuarios',
           align: 'start',
           sortable: false,
           value: 'name',
         },
-        { text: 'ID', value: 'id' },
-        { text: 'Nombre', value: 'nombre' },
-        { text: 'Correo electronico', value: 'email' },
-        { text: 'Estado', value: 'estado' },
-        { text: 'Contraseña', value: 'password' },
+        { text: 'ID', value: 'id' ,sortable:false},
+        { text: 'Nombre', value: 'nombre',sortable:false },
+        { text: 'Correo Electronico', value: 'email',sortable:false },
+        { text: 'Contraseña', value: 'password',sortable:false },
+        { text: 'Estado', value: 'estado',sortable:false },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
       usuarios: [],
       editedIndex: -1,
       editedItem: {
-        nombre: '',
+        name: '',
         id: 0,
-        email: 0,
-        password: "",
-        rol: '',
+        nombre: '',
+        email: '',
+        password: 0,
         estado: 0,
       },
       defaultItem: {
-        nombre: '',
+        name: '',
         id: 0,
-        email: 0,
-        password: '',
-        rol: '',
+        nombre: '',
+        email: '',
+        password: 0,
         estado: 0,
       },
     }),
@@ -185,9 +218,9 @@ export default {
     methods: {
       list(){
         
-      this.$axios.get('/usuario/list')
+      this.$axios.get('/Usuarios/list')
         .then( (response) => {
-          this.usuarios = response.data
+          this.categorias = response.data
           this.cargando = false
         })
         .catch( error => {
@@ -197,7 +230,15 @@ export default {
 
       },
       initialize () {
-        this.list()
+        this.list(),
+        this.desserts = [
+        {
+          name: '',
+          id: 0,
+          nombre: '',
+          email: '',
+          password: 0,
+          estado: 0,        },]
       },
       
 
@@ -218,9 +259,9 @@ export default {
 
       deleteItemConfirm () {
         if (this.editedItem.estado === 1) {
-          this.$axios.put('/usuario/deactivate', {id: this.editedItem.id})
+          axios.put("insertar url de la base de datos/api/categoria/deactivate", {id: this.editedItem.id})
         }else {
-          this.$axios.put('/usuario/activate', {id: this.editedItem.id})
+          axios.put("insertar url de la base de datos/api/categoria/activate", {id: this.editedItem.id})
 
         }
             this.closeDelete()
@@ -250,24 +291,17 @@ export default {
 
           let objetoBusqueda = {
               nombre : this.editedItem.nombre,
-              email : this.editedItem.email,
-              id :  this.editedItem.id
+              email : this.editedItem.email , 
           }
-          this.$axios.put('/api/usuario/update', objetoBusqueda)
-          Object.assign(this.usuarios[this.editedIndex], this.editedItem)
+          axios.put("insertar url de la base de datos/api/usuarios/update", objetoBusqueda)
+          Object.assign(this.categorias[this.editedIndex], this.editedItem)
         } else {
           let objetoBusqueda = {
               nombre : this.editedItem.nombre,
-              email : this.editedItem.email,
-              password: this.editedItem.password,
-              rol: this.editedItem.rol,
-              estado : 1
+              email : email1axios.post("insertar url de la base de datos/api/categoria/add", objetoBusqueda),
           }
-           this.$axios.post('/usuario/add', objetoBusqueda)
-          this.usuarios.push(this.editedItem)
-        }
         this.close()
-      },
-    },
+        }
+      }},
 }
 </script>
